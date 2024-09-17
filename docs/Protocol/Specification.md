@@ -35,6 +35,21 @@ Looking at an examplary Data Capture, we can see which part of the frame is what
 | `40 F019 EA58 0024 3E0C 0000 0000 0768 1701 0100 0014 A83C 12` | Data                                                                                                          |
 | `40`                                                           | FCS                                                                                                           |
 
+Custom Sony protocol (= RFCOMM payload/data):
+
+| Data (Hex)                                                     | Sony Frame Part                                 |
+| -------------------------------------------------------------- | ----------------------------------------------- |
+| `3E`                                                           | Start marker                                    |
+| `0C`                                                           | Message type: 0x01 = ACK, 0x0C = some data      |
+| `00`                                                           | Sequence number                                 |
+| `0000 0007`                                                    | Length of Sony payload                          |
+| `68 1701 0000 0008`                                            | Sony payload (0x68 = set Ambient Sound Control) |
+| `9B`                                                           | Checksum, 1-Byte counter (*)                    |
+| `3C`                                                           | End marker                                      |
+
+(*) Checksum (1-Byte counter):  
+message type + sequence number + length + Sony payload = 0x0C + 0x00 + 0x00 + 0x00 + 0x00 + 0x07 + 0x68 + 0x17 + 0x01 + 0x00 + 0x00 + 0x00 + 0x08 = 0x9B
+
 ## <a name="ea-field"></a>Extend Address Field
 
 The Extend Address (EA) field can extend the *address* or *length* fields. To calculate whether the
